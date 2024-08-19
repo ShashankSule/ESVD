@@ -1,0 +1,32 @@
+% Let's generate a bunch of deer data for descramblement
+% Load the training set parameters
+parameters=library_dd();
+
+% Specify number of traces to produce
+parameters.ntraces=1e6;
+parameters.training_input = 'noisy_deer'; 
+
+% Set the training database name
+file_name='example_set_2layer_17dec22_ker4_ang3.mat';
+
+% Generate the training library
+% [time_grid,dist_grid,dist_distr_lib,...
+%     deer_ffact_lib,background_lib,deer_trace_lib,...
+%     deer_clean_lib,exchange_lib,parameters]=deer_lib_gen(file_name,parameters);
+
+sample = deer_lib_gen(file_name,parameters);
+save(file_name, 'sample', '-v7.3')
+
+%% train one net using parameters
+train_one_net(sample.parameters, 1e6, 2040102)
+% file_number=303;
+% parameters = sample.parameters;
+% layers=dist_net(parameters.npoints); % get layers 
+% train_opts=trainingOptions('adam','MaxEpochs',50,'Verbose',true,'Shuffle','never',...
+%                            'InitialLearnrate',0.01,'LearnRateSchedule','piecewise',...
+%                            'LearnRateDropPeriod',5,'LearnRateDropFactor',0.50,...
+%                            'MiniBatchSize',1e3,'ExecutionEnvironment','auto',...
+%                            'L2Regularization',1e-6,'ResetInputNormalization',false,...
+%                            'Plots','none','DispatchInBackground',true); % get opts
+% [net,train_stats]=trainNetwork(sample.deer_noisy_lib', sample.dist_distr_lib',layers,train_opts);
+% save([num2str(file_number) '.mat'],'net','train_stats','train_opts','parameters');
